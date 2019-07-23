@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="template3">
+<head>
+<meta charset="utf-8" />
+<title>Ajouter compte</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="col-md-5 col-md-offset-4 spacer40">
+		<div class="panel panel-primary">
+				<div class="panel-heading">Ajouter compte</div>
+				<div class="panel-body">
+
+					<form th:action="@{/ajouterCompte}" method="post">
+						<div>
+							<label th:text="${msg}" th:if="${msg}" class="green"></label>
+						</div>
+						<div>
+							<label th:text="${existant}" class="red" th:if="${existant}"></label>
+						</div>
+						<div>
+							<label>Code</label> <input type="text" name="cCompte"
+								required="required" />
+
+						</div>
+						<div>
+							<label>Code du client </label><select name="cClient"
+								class="form-control-file">
+								<option th:each="o:${cl}" th:text="${o.code}"></option>
+							</select>
+						</div>
+						<div>
+						<label>Client introuvable? </label><a th:href="@{/consulterClient}">Ajouter maintenant</a></div>
+						<input type="radio" name="typeCompte" value="CC"
+							onclick="document.getElementById('decouvert').style.display='block'"
+							onchange="document.getElementById('taux').style.display='none'"
+							required="required" /> <label>Compte courant</label> <input
+							type="radio" name="typeCompte" value="CE"
+							onclick="document.getElementById('taux').style.display='block'"
+							onchange="document.getElementById('decouvert').style.display='none'"
+							required="required" /> <label>Compte epargne</label>
+						<div id="decouvert" style="display: none">
+							<label>Découvert :</label> <input type="number"
+								name="valeurDecouvert" />
+						</div>
+						<div id="taux" style="display: none">
+							<label>Taux :</label> <input type="number" name="valeurTaux" />
+						</div>
+						<button type="submit" class="btn btn-primary">Ajouter</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorator="template2">
+<head>
+<meta charset="utf-8" />
+<title>Gérer les clients</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="col-md-6">
+
+			<div class="panel panel-primary">
+				<div class="panel-heading">Chercher un client</div>
+				<div class="green" th:if="${succes}" th:text="${succes}"></div>
+				<div class="red" th:if="${introuvable}"
+					th:text="${introuvable.message}"></div>
+				<div class="panel-body">
+					<form th:action="@{/consulterClient}" method="get">
+						<div>
+							<label>Code du client :</label> <input type="number"
+								name="codeClient" th:value="${codeClient}" required="required" />
+							<input type="submit" class="btn btn-primary" value="Chercher" />
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="panel panel-primary" th:if="${client}">
+				<div class="panel-heading">Informations sur le client</div>
+				<div class="panel-body">
+					<div>
+						<label>Code client :</label> <label th:text="${client.code}"></label>
+					</div>
+					<div>
+						<label>Nom :</label> <label th:text="${client.nom}"></label>
+					</div>
+					<div>
+						<label>E-mail :</label> <label th:text="${client.mail}"></label>
+					</div>
+					<div>
+						<table class="table table-striped">
+							<tr>
+								<th>Code du compte</th>
+								<th>Type</th>
+								<th>Date de création</th>
+								<th>Solde</th>
+							</tr>
+							<tr th:each="c:${listComptes}">
+								<td th:text="${c.codeCompte}"></td>
+								<td th:text="${c.class.simpleName}"></td>
+								<td th:text="${c.dateCreation}"></td>
+								<td th:text="${c.solde}"></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-primary" th:if="${client}">
+				<div class="panel-heading">Modifier le client</div>
+				<div class="panel-body">
+					<form th:action="@{/modifierClient}" method="post">
+						<div>
+							<label>Code du client :</label> <input type="number"
+								name="codeClient" th:value="${codeClient}" required="required" />
+						</div>
+						<div>
+							<p>
+								<label>Nouveau nom du client :</label> <input type="text"
+									name="nvnom" th:value="${nvnom}" />
+							</p>
+							<p>
+								<label>Nouveau mail : </label> <input type="text" name="nvmail"
+									th:value="${nvmail}" />
+							</p>
+							<input type="submit" value="Modifier" class="btn btn-primary"
+								th:if="${client}" />
+						</div>
+					</form>
+
+				</div>
+			</div>
+			<div class="panel panel-primary">
+				<div class="panel-heading">Ajouter client</div>
+				<div class="panel-body">
+
+					<form th:action="@{/ajouterClient}" method="get">
+						<div>
+							<label>Nom du client</label> <input type="text" name="nomClt"
+								required="required" />
+
+						</div>
+						<div>
+							<label>Email</label> <input type="text" name="mail"
+								required="required" />
+						</div>
+						<div th:if="${invalide}" class="text-danger" th:text="${invalide}">
+						</div>
+						<div th:if="${valide}" class="green" th:text="${valide}"></div>
+						<button class="btn btn-primary" type="submit">Ajouter</button>
+					</form>
+				
+				</div>
+			</div>
+
+		</div>
+		<div class="col-md-6">
+			<div class="panel panel-primary">
+				<div class="panel-body">
+					<form th:action="@{/consulterClientParNom}" method="get">
+						<div>
+							<label>Nom du client :</label> <input type="text" name="nom"
+								th:value="${nom}" /> <input type="submit"
+								class="btn btn-primary" value="Chercher" />
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="panel panel-primary">
+				<div class="text-danger" th:if="${vide}" th:text="${vide}"></div>
+				<div class="panel-heading">Liste des clients</div>
+				<div class="panel-body">
+					<table class="table table-striped">
+						<tr>
+							<th>Nom du client</th>
+							<th>Code</th>
+							<th>E-mail</th>
+						</tr>
+						<tr th:each="o:${allClient}">
+							<td th:text="${o.nom}"></td>
+							<td th:text="${o.code}"></td>
+							<td th:text="${o.mail}"></td>
+						</tr>
+					</table>
+					<div class="container" th:if="${parNom}">
+						<ul class="nav nav-pills">
+							<li th:each="p,status:${pagesClient}"><a
+								th:text="${status.index}"
+								th:href="@{/consulterClientParNom(nom=${nom},page=${status.index})}"></a>
+							</li>
+						</ul>
+					</div>
+					<div class="container" th:if="${tous}">
+						<ul class="nav nav-pills">
+							<li th:each="p,status:${pagesClient}"><a
+								th:text="${status.index}"
+								th:href="@{/consulterClient(codeClient=${codeClient},page=${status.index})}"></a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
